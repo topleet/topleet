@@ -1,0 +1,8 @@
+/bin/
+/.cache-main
+/build/
+target/
+/.idea/
+/project/
+/temp/
+config.properties
