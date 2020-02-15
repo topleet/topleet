@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+.node rect {
+    stroke: #333;
+    stroke-width: 1.5px;
+    fill: #fff;
+}
+
+path {
+    stroke: steelblue;
+    stroke-width: 4px;
+    fill: none;
+}
+
+g[fstLine="false"] > ellipse {
+    stroke: gray;
+    fill: lightgray;
+}
+
+
+g[bypass="true"] > path {
+    stroke-dasharray: 5, 5;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 2px;
+    shape-rendering: crispEdges;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 1px;
+    font: 10px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 2px;
+}
+
+</style>
+<body>
+
+<!-- load the d3.js library -->
+<script src="d3.v4.min.js"></script>
+<script src="viz.js" type="javascript/worker"></script>
+<script src="d3-graphviz.min.js"></script>
+
+<div id="graphContainer" style="text-align: center;"></div>
+
+<script>
+
+    function renderTable(data) {
+        data = data["hover"]
+
+        // Extracting the keys.
+        var keys = new Set();
+        for (var i = 0; i < data.length; i++) {
+            var obj = data[i];
+            for (var k in obj) {
+                keys.add(k);
+            }
+        }
+        keys = Array.from(keys);
+
+        // Create table and header.
+        var table = document.createElement("table");
+        var header = document.createElement("tr");
+        table.appendChild(header);
+
+        for (var k in keys) {
+            var th = document.createElement("th");
+            var text = document.createTextNode(keys[k]);
+            header.appendChild(th);
+            th.appendChild(text);
+        }
+
+        // Create rows.
+        for (var i = 0; i < data.length; i++) {
+            var obj = data[i];
+            var tr = document.createElement("tr");
+            table.appendChild(tr);
+            for (var k in keys) {
+                var attr = obj[keys[k]];
+                if (attr == undefined)
+                    attr = "";
+                var td = document.createElement("td");
+                td.insertAdjacentHTML('beforeend', attr);
+                tr.appendChild(td);
+
+            }
+        }
+        return table
+    }
+
+    var div = d3.select("body")
+        .append("div")  // declare the tooltip div
+        .attr("class", "tooltip")              // apply the 'tooltip' class
+        .style("opacity", 0);                  // set the opacity to nil
+
+
+    var dotdata = "digraph R {}";
+    var jsondata = {};
+
+    d3.select("#graphContainer")
+        .graphviz()
+        .fade(false)
+        .height(1600)
+        .width(2300)
+        .renderDot(dotdata)
+        .on("end", function () {
+            var svg = d3.select("#graphContainer");
+            var hoverElements = svg.selectAll(".edge,.node");
+
+            // Append annotations to svg
+            for (svgid in jsondata) {
+                var annotations = jsondata[svgid]["svg"];
+                for (annotation in annotations) {
+                    d3.selectAll("#" + svgid).attr(annotation, annotations[annotation]);
+                }
+            }
+
+            hoverElements.on("mouseover", function (d) {
+                div.transition()
+                    .duration(100)
+                    .style("opacity", 0);
+                div.transition()
+                    .duration(100)
+                    .style("opacity", .9);
+                div.style("left", (d3.event.pageX + 30) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
+                    .html("")
+                    .node()
+                    .appendChild(renderTable(jsondata[d3.event.target.parentElement.id])
+                    );
+            });
+        });
+
+</script>
+
+</body>
