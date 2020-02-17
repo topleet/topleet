@@ -3,7 +3,7 @@ package org.topleet.apps
 import org.eclipse.jdt.core.dom.{AST, ASTParser, ASTVisitor, CatchClause, CompilationUnit, ConditionalExpression, DoStatement, EnhancedForStatement, ForStatement, IfStatement, SwitchCase, TryStatement, WhileStatement}
 import org.topleet.Engine
 import org.topleet.engines.IncrementalParallelEngine
-import org.topleet.git.{Resource, SHA}
+import org.topleet.git.{ Resource, SHA}
 import org.topleet.Leet
 
 object Sandbox {
@@ -76,17 +76,18 @@ object Sandbox {
   implicit val engine: Engine = IncrementalParallelEngine.create()
 
   def main(args: Array[String]): Unit = {
-    "jwtk/jjwt"
+    // Processing "jwtk/jjwt"
+
     val shas: Leet[SHA, Single[SHA]] = git("jwtk/jjwt")
 
     val resources: Leet[SHA, Bag[(Path, Resource)]] = shas.resources()
 
-    val mcCabe: Leet[SHA,Bag[Int]] = resources
-      .filter{case (path, resources) => path.endsWith(".java")}
-      .map{case (path,resource) => computeMCC(resource)}
+    val mcCabe: Leet[SHA, Bag[Int]] = resources
+      .filter { case (path, resource) => path.endsWith(".java") }
+      .map { case (path, resource) => computeMCC(resource) }
 
-    val out: Leet[SHA, Single[Int]] = mcCabe.sum()
+    val sum: Leet[SHA, Single[Int]] = mcCabe.sum()
 
-    out.show()
+    sum.show()
   }
 }
