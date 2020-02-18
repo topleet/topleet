@@ -95,6 +95,6 @@ implicit val engine: Engine = SparkEngine.create(ncommits, spark)
 ```
 
 # Outstanding Tasks
-Next, we will fill the missing gaps in the implementations, improve the engines 
+Next, we will fill the missing gaps, improve the engines 
 and prepare the first maven release.  
 
