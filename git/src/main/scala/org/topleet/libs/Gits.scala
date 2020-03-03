@@ -7,11 +7,13 @@ import java.util.Date
 
 import com.google.common.base.Charsets
 import com.google.common.io.Files
+import org.apache.commons.io.FileUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.topleet
 import org.topleet.git.{Gitobject, Resource, SHA}
 import org.topleet.{Dynamics, Engine, Leet, Topleets}
 
+import scala.io.Source
 import scala.reflect.{ClassTag => CT}
 
 
@@ -181,17 +183,18 @@ object Gits {
       val options = if (horizontal) "rankdir=\"LR\";" else ""
 
 
-      val templete = Files.asCharSource(new File("git/src/main/resources/viewer/viewer.html"), Charsets.UTF_8).read()
-      val instance = templete
+      val template = Source.fromResource("viewer/viewer.html").getLines().reduce(_ + System.lineSeparator() + _)
+
+      val instance = template
         .replace("digraph R {}", "digraph R {" + StringEscapeUtils.escapeEcmaScript(options + vertexDot + edgesDot).replace("\\\\r\\\\n", "\\\\l") + "}")
         .replace("jsondata = {}", "jsondata = {" + json + "}")
 
       file.mkdirs()
       Files.asCharSink(new File(file, "viewer.html"), Charsets.UTF_8).write(instance)
 
-      Files.copy(new File("git/src/main/resources/viewer/d3.v4.min.js"), new File(file, "d3.v4.min.js"))
-      Files.copy(new File("git/src/main/resources/viewer/d3-graphviz.min.js"), new File(file, "d3-graphviz.min.js"))
-      Files.copy(new File("git/src/main/resources/viewer/viz.js"), new File(file, "viz.js"))
+      FileUtils.copyInputStreamToFile(getClass.getResourceAsStream("/viewer/d3.v4.min.js"), new File(file, "d3.v4.min.js"))
+      FileUtils.copyInputStreamToFile(getClass.getResourceAsStream("/viewer/d3-graphviz.min.js"), new File(file, "d3-graphviz.min.js"))
+      FileUtils.copyInputStreamToFile(getClass.getResourceAsStream("/viewer/viz.js"), new File(file, "viz.js"))
 
       if (open)
         if (System.getProperty("os.name") == "Windows 10" || System.getProperty("os.name").indexOf("win") >= 0)
