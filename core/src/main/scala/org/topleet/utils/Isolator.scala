@@ -79,7 +79,7 @@ object Isolator {
     //val classpath: String = Thread.currentThread.getContextClassLoader.asInstanceOf[URLClassLoader].getURLs.map(_.getFile).reduce(_ + File.pathSeparator + _)
     //val classpath: String = Isolator.getClass.getClassLoader..get.getURLs.map(_.getFile).reduce(_ + File.pathSeparator + _)
     val classpath =  System.getProperty("java.class.path")
-    val isolator = Isolator.getClass.getName.substring(0, IsolatorPool.getClass.getName.length - 1)
+    val isolator = Isolator.getClass.getName.substring(0, Isolator.getClass.getName.length - 1)
     val process = new ProcessBuilder(System.getProperty("java.home") + "/bin/java", "-Xss8m", "-Xmx15000m", "-classpath", classpath, isolator, port.toString).inheritIO().start
     // Accept client socket and get streams to client.
     val clientSocket = serverSocket.accept()
