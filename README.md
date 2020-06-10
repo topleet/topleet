@@ -32,7 +32,7 @@ import org.topleet.engines.IncrementalParallelEngine
 
 implicit val engine: Engine = IncrementalParallelEngine.create()
 ```
-Hereafter, the actual processing can start with the initialization 
+Hereafter, the actual processing can start with the initialization of
 the first data structure of type `Leet`.
 ```scala
 import org.topleet.git.SHA
