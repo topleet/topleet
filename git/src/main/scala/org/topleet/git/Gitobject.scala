@@ -5,6 +5,7 @@ import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import com.google.common.cache.LoadingCache
 import org.apache.commons.io.IOUtils
 import org.eclipse.jgit.api.{BlameCommand, Git}
 import org.eclipse.jgit.diff.DiffEntry.ChangeType
@@ -23,19 +24,33 @@ import scala.collection.mutable
  */
 object Gitobject {
 
-  private def fsload(address: String): Repository = Loading.fileSystemLoadingCache(address) {
+  private def cloneAndLoad(address: String): Repository = Loading.fileSystemLoadingCache(address) {
     case (s: String, f: File) =>
-      val git = Git.cloneRepository.setBare(true).setGitDir(f).setURI("https://github.com/" + s + ".git").call
+      val git = Git.cloneRepository.setBare(true).setGitDir(f).setURI(s).call
       git.getRepository.close()
       git.close()
   } { case (_: String, f: File) =>
+    loadFromFS(f)
+  }
+
+  private def loadFromFS(f: File): Repository = {
     val repositoryBuilder = new FileRepositoryBuilder();
     repositoryBuilder.setMustExist(true)
     repositoryBuilder.setGitDir(f)
     repositoryBuilder.build()
   }
 
-  val buffer = Loading.threadLocalLoadingCache(1)((s: String) => fsload(s))(t => t.close())
+  val buffer: ThreadLocal[LoadingCache[String, Repository]] = Loading
+    .threadLocalLoadingCache[String, Repository](1) {
+      // Loading repo options.
+      case s if s.startsWith("http") => cloneAndLoad(s)
+      case s if s.startsWith("file:///") => loadFromFS(new File(s.substring("file:///".length)))
+      case s: String => cloneAndLoad("https://github.com/" + s + ".git")
+    } {
+      // Closing repos.
+      t: Repository => t.close()
+    }
+
 
 }
 
