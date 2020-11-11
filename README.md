@@ -110,7 +110,7 @@ the default browser. Parts of the behavior can be adapted in the call, e.g., ori
 Zooming and moving is possible. 
 
 Showing the initial data structure of the previous sections by `shas.show()`
-results in the following window opening in the browser. While hovering over nodes,
+results in the following window opening in the browser ([Viewer](content/viewer1.html)). While hovering over nodes,
 meta-data appears, and a link to the commit on GitHub can be navigated.  
 
 ![Alt text](content/graph1.png?raw=true "")
@@ -121,7 +121,7 @@ a trick called "graph contraction" to only show edges and nodes
 where change happen. 
 
 The following graph shows an evolving cyclomatic complexity metric
-summed over all files of a repository. 
+summed over all files of a repository ([Viewer](content/viewer2.html)). 
 Nodes that are connected by an
 edge not changing the metric, are 'merged' into a single node (we refer to this as 'contracted').
 This decreases the size of the visualized graph. The annotated meta-data of such 
