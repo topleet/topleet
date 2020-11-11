@@ -101,7 +101,31 @@ val ncommits: Int = ...
 implicit val engine: Engine = SparkEngine.create(ncommits, spark)
 ```
 
-# Outstanding Tasks
-Next, we will fill the missing gaps, improve the engines 
-and prepare the first maven release.  
+# Graph View (`.show()`)
 
+The content of the background graph can be visualized using
+call `.show()` on any `Leet` data structure (produced by the `Gits` library). 
+The call generates a html file that is opened by
+the default browser. Parts of the behavior can be adapted in the call, e.g., orientation or edge labels.
+Zooming and moving is possible. 
+
+Showing the initial data structure of the previous sections by `shas.show()`
+results in the following window opening in the browser. While hovering over nodes,
+meta-data appears, and a link to the commit on GitHub can be navigated.  
+
+![Alt text](content/graph1.png?raw=true "")
+
+A data structure might get large, and the recent visualization might hit limitations
+showing extraordinary large graphs. However, the graph viewer employs
+a trick called "graph contraction" to only show edges and nodes
+where change happen. 
+
+The following graph shows an evolving cyclomatic complexity metric
+summed over all files of a repository. 
+Nodes that are connected by an
+edge not changing the metric, are 'merged' into a single node (we refer to this as 'contracted').
+This decreases the size of the visualized graph. The annotated meta-data of such 
+nodes is special as it lists all contracted commits. In such list, the first commit (owner)
+did the actual change, and the other commits just follow without further changes.
+
+![Alt text](content/graph2.png?raw=true "")
