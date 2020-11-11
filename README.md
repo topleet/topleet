@@ -13,6 +13,13 @@ corresponding library.
 * **Eval** contains the test and measurement utils (in migration).
 
 ## Getting Started
+Check out this repository or add the following dependencies to your sbt file (currently just available for scala 2.12).
+```scala
+scalaVersion := "2.12.10"
+libraryDependencies += "org.topleet" %% "core" % "0.1.0"
+libraryDependencies += "org.topleet" %% "git" % "0.1.0" // Optional Git
+libraryDependencies += "org.topleet" %% "spark" % "0.1.0" // Optional Spark
+```
 
 The scala object [Sandbox](apps/src/main/scala/org/topleet/apps/Sandbox.scala)
 in the Apps project serves as a good template to start with. 
