@@ -131,8 +131,8 @@ did the actual change, and the other commits just follow without further changes
 ![Alt text](content/graph2.png?raw=true "")
 
 # Misc
-Presentation slides can be found ([here](content/slides.pdf))
-and the corresponding SANER paper can be found ([here](content/paper.pdf))
+Presentation slides can be found [here](content/slides.pdf)
+and the corresponding SANER paper can be found [here](content/paper.pdf)
 with the following BibTeX entry. 
 ```
 @inproceedings{DBLP:conf/wcre/HartelL20,
