@@ -6,7 +6,7 @@ Incremental Map-Reduce on Repository History
 This repository uses sbt and contains the following sub-projects: 
 * **Core** contains the minimal functionality, the native library
 and the basic engine implementations.
-* **Git** contains the the connector to Git repositories and the
+* **Git** contains the connector to Git repositories and the
 corresponding library.
 * **Spark** contains the implementation of the first Spark engine.
 * **Apps** contains first applications cases (in migration).
