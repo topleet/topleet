@@ -3,6 +3,8 @@
 /build/
 target/
 /.idea/
-/project/
+/project/target/
+/project/project/
 /temp/
 config.properties
+.bsp
